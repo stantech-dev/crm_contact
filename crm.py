@@ -133,9 +133,20 @@ def search(search_term,db_path="dealbook.db"):
     print("-"*106)
     return True
 
-def export(export_patch = "dealbook.csv"):
-    with connection() as conn:
-conn.execute("SELECT FROM dealbook")
+def export(export_path = "dealbook.csv"):
+    with connection () as conn:
+        cursor = conn.execute("SELECT * FROM dealbook")
+        rows = cursor.fetchall()
+    if not rows:
+        print("❌ No leads to export")
+        return False
+    with open(export_path, "w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames= ["id", "name","contact","status", "date"])
+        writer.writeheader() # writes the csv"s columns
+        for row in rows:
+            writer.writerow(dict(row))
+    print(f"✔ {len(rows)} lead(s) exported to {export_path}")
+    return True
     
     
 # OOP
@@ -191,6 +202,9 @@ def cli():
     p_search = sub.add_parser("search", help="Search by name, status or id")
     p_search.add_argument("search", help= "Full search term or a partial hint of search term")
 
+    p_export = sub.add_parser("export", help="Export leads to CSV")
+    p_export.add_argument("-o","--output", default= "dealbook.csv", help="Output file names")
+
     args = parser.parse_args()
 # DISPATCHER
     if args.command == "add":
@@ -214,6 +228,9 @@ def cli():
     elif args.command == "search":
         if search(args.search):
             print("✔ Search done")
+    elif args.command == "export":
+        if export(args.output):
+            print("✔ Leads exported")
     else:
         parser.print_help()
 
