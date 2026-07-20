@@ -15,6 +15,9 @@ env/
 *.db
 *.sqlite3
 *.csv
+*.db
+*.log
+.env
 
 # Environment variables / secrets
 .env
