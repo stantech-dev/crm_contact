@@ -171,7 +171,7 @@ class Lead:
         email_validation = r"^[a-z0-9_\-\.]+@[a-z0-9]+\.[a-z]{2,}$"
         phone_validation = r"^(\+254|0)[0-9]{9}$"
         if not (re.search(email_validation,contact) or re.search(phone_validation,contact)):
-            raise InvalidContactError("Re-enter contact")
+            raise InvalidContactError("Please re-enter your contact")
         self._contact=contact
 
 
